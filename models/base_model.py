@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 """Defines the base class that all the object inherit from."""
+from . import storage
 import uuid
 import datetime as a
 
@@ -24,6 +25,9 @@ class BaseModel():
             b = a.datetime.now()
             self.created_at = b
             self.updated_at = b
+        key = "{}.{}".format(self.__class__.__name__, self.id)
+        if key not in storage.objects:
+            storage.new(self)
 
     def __str__(self):
         """Return string representation of the object."""
@@ -34,6 +38,7 @@ class BaseModel():
         """Update the time a change was made and store the changes."""
         c = a.datetime.now()
         self.updated_at = c
+        storage.save()
 
     def to_dict(self):
         """Return a string representation of the object."""
